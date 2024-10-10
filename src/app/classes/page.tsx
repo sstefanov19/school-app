@@ -1,49 +1,40 @@
-import ClassesCard from "@/components/ClassesCard";
-import React from "react";
+"use client";
 
-export default function Classes() {
+import React from 'react';
+import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
+import ClassesCard from '@/components/ClassesCard';
 
+interface Subject {
+  id: number;
+  name: string;
+  grade: number;
+  teacher: string;
+}
 
-    const subjects = [
-        {
-            id : 1,
-            name : "Math",
-        },
-        {
-            id :2,
-            name : "Physics",
-        },
-        {
-            id: 3,
-            name : "History",
-        },
-        {
-            id : 4,
-            name : "Biology",
-        },
-        {
-            id : 5,
-            name : "Gym",
-        },
-        {
-            id : 6,
-            name : "English",
-        },
-        {
-            id : 7,
-            name : "Chemistry",
-        },
-        {
-            id : 8,
-            name : "Art",
-        }
-    ]
+const fetchSubject = async (): Promise<Subject[]> => {
+  const response = await axios.get<{ results: Subject[] }>('/api/classes');
+  console.log(response.data.results);
+  return response.data.results;
+
+};
+
+export default function Classes(): JSX.Element {
+  const { data: subjects = [], isLoading, error } = useQuery({
+    queryKey: ['subjects'],
+    queryFn: fetchSubject,
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading subjects</div>;
+
+  if(subjects.length === 0) return <div>No subjects found</div>;
 
   return (
     <div className="min-h-screen flex justify-center bg-gray-100">
-      <div className="w-full mx-16 mt-4 grid xl:grid-cols-4 2xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-x-10  ">
-        {subjects.map((subject) => (
-            <ClassesCard key={subject.id} name={subject.name} />
+      <div className="w-full mx-16 mt-4 grid gap-x-10 grid-cols-[repeat(auto-fill,minmax(200px,1fr))]">
+        {subjects.map((subject: Subject) => (
+          <ClassesCard key={subject.id} {...subject} />
         ))}
       </div>
     </div>

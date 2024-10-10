@@ -17,8 +17,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import Sidebar from "./Sidebar";
-import Header from "./Header";
+
+
 
 export default function Dashboard() {
   return (

@@ -12,3 +12,12 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+
+model Classes {
+    id Int @id @default(autoincrement())
+    subject String
+    teacher String
+    grade String
+
+}

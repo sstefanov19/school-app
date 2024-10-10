@@ -4,6 +4,7 @@ import "./globals.css";
 import { Layout } from "lucide-react";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
+import  QueryProvider from "@/components/QueryProvider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -27,15 +28,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+      <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} flex antialiased`}
-      >
+        className={`${geistSans.variable} ${geistMono.variable} flex antialiased`}>
+        <QueryProvider>
         <Sidebar />
         <div className="flex-1 overflow-y-auto">
         <Header />
+        <div className="min-h-screen">
         {children}
         </div>
+        </div>
+     </QueryProvider>
       </body>
     </html>
   );
