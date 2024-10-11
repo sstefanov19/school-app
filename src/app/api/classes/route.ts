@@ -9,7 +9,7 @@ interface ClassProps {
 }
 
 
-export async function GET(req: NextRequest) {
+export async function GET() {
     try {
         const classes = await prisma.classes.findMany();
         console.log('Database Response:', classes);
