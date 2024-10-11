@@ -25,10 +25,10 @@ export default function Classes(): JSX.Element {
     queryFn: fetchSubject,
   });
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading subjects</div>;
+  if (isLoading) return <div className='font-bold text-center md:text-4xl text-xl'>Loading...</div>;
+  if (error) return <div className='font-bold text-center md:text-4xl text-xl'>Error loading subjects</div>;
 
-  if(subjects.length === 0) return <div>No subjects found</div>;
+  if(subjects.length === 0) return <div className='font-bold text-center md:text-4xl text-xl'>No subjects found</div>;
 
   return (
     <div className="min-h-screen flex justify-center bg-gray-100">
