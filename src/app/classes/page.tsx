@@ -7,7 +7,7 @@ import ClassesCard from '@/components/ClassesCard';
 
 interface Subject {
   id: number;
-  name: string;
+  subject: string;
   grade: number;
   teacher: string;
 }
