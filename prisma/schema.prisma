@@ -21,3 +21,16 @@ model Classes {
     grade Int
 
 }
+
+
+
+model Student {
+    account_id Int @id @default(autoincrement())
+    name String
+    grade Int
+}
+
+model Teacher {
+    account_id Int @id @default(autoincrement())
+    name String
+}

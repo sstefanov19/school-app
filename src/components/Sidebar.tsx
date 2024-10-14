@@ -16,7 +16,7 @@ export default function Sidebar() {
   const teacher = true;
 
   return (
-    <aside className="w-64 bg-gradient-to-b from-primary to-primary-foreground text-primary-foreground">
+    <aside className="w-64 bg-gradient-to-tr from-zinc-600 to-zinc-400 text-primary-foreground">
       <div className="p-4">
         <Link href="/">
           <h1 className="text-2xl font-bold">EduOrganizer</h1>

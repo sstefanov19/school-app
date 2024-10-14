@@ -8,7 +8,7 @@ const account  = "Teacher";
 
 export default function Header() {
   return (
-    <header className="bg-gradient-to-r to-secondary from-secondary-foreground text-secondary-foreground shadow-md">
+    <header className="bg-gradient-to-tr from-zinc-400 to-zinc-600 text-secondary-foreground shadow-md">
     <div className="flex items-center justify-between px-6 py-4">
         {account === "Teacher" ?
       <h2 className="text-xl text-white font-semibold">Teacher Dashboard</h2>

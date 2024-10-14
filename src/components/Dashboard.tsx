@@ -1,113 +1,129 @@
-import React from "react";
-import { PlusCircle } from "lucide-react";
+"use client"
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
 
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+const formSchema = z.object({
+  role: z.enum(['teacher', 'student']),
+  name: z.string().nonempty('Name is required'),
+  grade: z.preprocess((val) => Number(val), z.number().nonnegative('Invalid grade').refine(value => value !== 0, {
+    message: 'Grade cannot be zero',
+  })).optional(),
+});
 
+export default function CreateClasses() {
+  const [role, setRole] = useState<'teacher' | 'student'>('student');
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      role: 'student',
+      name: '',
+      grade: 0,
+    },
+  });
 
+  const handleSubmit = async (data : { role: 'teacher' | 'student'; name: string; grade?: number; }) => {
+    try {
+      const response = await fetch('/api/account', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          isTeacher: data.role === 'teacher',
+          name: data.name,
+          grade: data.grade,
+        }),
+      });
 
-export default function Dashboard() {
+      if (response.ok) {
+        console.log('Class created');
+        form.reset();
+      } else {
+        const errorData = await response.json();
+        console.error('Failed to create class:', errorData);
+        alert(`Failed to create class: ${errorData.error}`);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An unexpected error occurred. Please try again.');
+    }
+  };
+
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return null;
+  }
+
   return (
-    <div className="flex h-screen bg-gradient-to-br from-gray-100 to-gray-200">
-      <main className="flex-1 overflow-y-auto">
-        {/* Dashboard Content */}
-        <div className="p-6">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {/* Upcoming Assignments */}
-            <Card className="bg-gradient-to-br from-card to-card/80 border-none">
-              <CardHeader>
-                <CardTitle>Upcoming Assignments</CardTitle>
-                <CardDescription>Next 7 days</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2">
-                  <li className="flex justify-between">
-                    <span>Math Quiz</span>
-                    <span className="text-muted-foreground">Tomorrow</span>
-                  </li>
-                  <li className="flex justify-between">
-                    <span>History Essay</span>
-                    <span className="text-muted-foreground">In 3 days</span>
-                  </li>
-                  <li className="flex justify-between">
-                    <span>Science Project</span>
-                    <span className="text-muted-foreground">In 5 days</span>
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            {/* Class List */}
-            <Card className="bg-gradient-to-br from-card to-card/80 border-none">
-              <CardHeader>
-                <CardTitle>Your Classes</CardTitle>
-                <CardDescription>Current semester</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2">
-                  <li className="flex justify-between">
-                    <span>Math 101</span>
-                    <span className="text-muted-foreground">30 students</span>
-                  </li>
-                  <li className="flex justify-between">
-                    <span>History 202</span>
-                    <span className="text-muted-foreground">25 students</span>
-                  </li>
-                  <li className="flex justify-between">
-                    <span>Science 303</span>
-                    <span className="text-muted-foreground">28 students</span>
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            {/* Quick Assignment Creation */}
-            <Card className="bg-gradient-to-br from-card to-card/80 border-none">
-              <CardHeader>
-                <CardTitle>Create Assignment</CardTitle>
-                <CardDescription>Quick assignment creation</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form className="space-y-4">
-                  <Input
-                    placeholder="Assignment Title"
-                    className="bg-background/50"
-                  />
-                  <Select>
-                    <SelectTrigger className="bg-background/50">
-                      <SelectValue placeholder="Select Class" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="math">Math 101</SelectItem>
-                      <SelectItem value="history">History 202</SelectItem>
-                      <SelectItem value="science">Science 303</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Input type="date" className="bg-background/50" />
-                  <Button className="w-full bg-gradient-to-r from-primary to-primary-foreground hover:from-primary/90 hover:to-primary-foreground/90">
-                    <PlusCircle className="w-4 h-4 mr-2" />
-                    Create Assignment
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </main>
-    </div>
+    <main className='min-h-screen flex flex-col items-center p-8 bg-gradient-to-br from-gray-200 to-gray-100'>
+      <h1 className='text-black text-4xl font-bold mt-16 mb-8'>Register Teacher/Student</h1>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)} className='max-w-md w-full flex flex-col gap-6 bg-zinc-600 p-8 rounded-lg shadow-lg'>
+          <FormField control={form.control} name="role" render={({ field }) => (
+            <FormItem>
+              <FormLabel className='text-white font-bold text-lg mb-2'>Role</FormLabel>
+              <FormControl>
+                <select
+                  {...field}
+                  className='w-full p-3 rounded-lg bg-slate-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500'
+                  onChange={(e) => {
+                    field.onChange(e);
+                    setRole(e.target.value as 'teacher' | 'student');
+                  }}
+                >
+                  <option value="teacher">Teacher</option>
+                  <option value="student">Student</option>
+                </select>
+              </FormControl>
+              <FormMessage>{form.formState.errors.role?.message}</FormMessage>
+            </FormItem>
+          )} />
+          <FormField control={form.control} name="name" render={({ field }) => (
+            <FormItem>
+              <FormLabel className='text-white font-bold text-lg mb-2'>Name</FormLabel>
+              <FormControl>
+                <input
+                  {...field}
+                  type='text'
+                  className='w-full p-3 rounded-lg bg-slate-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500'
+                  placeholder='Name'
+                />
+              </FormControl>
+              <FormMessage>{form.formState.errors.name?.message}</FormMessage>
+            </FormItem>
+          )} />
+          {role === 'student' && (
+            <>
+              <FormField control={form.control} name="grade" render={({ field }) => (
+                <FormItem>
+                  <FormLabel className='text-white font-bold text-lg mb-2'>Grade</FormLabel>
+                  <FormControl>
+                    <input
+                      {...field}
+                      type='number'
+                      className='w-full p-3 rounded-lg bg-slate-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500'
+                      placeholder='Grade'
+                    />
+                  </FormControl>
+                  <FormMessage>{form.formState.errors.grade?.message}</FormMessage>
+                </FormItem>
+              )} />
+            </>
+          )}
+          <Button type='submit' className='w-full p-3 rounded-lg bg-blue-600 text-white font-bold hover:bg-blue-700 transition-colors'>
+            Submit
+          </Button>
+        </form>
+      </Form>
+    </main>
   );
 }

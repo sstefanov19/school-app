@@ -31,7 +31,7 @@ export default function Classes(): JSX.Element {
   if(subjects.length === 0) return <div className='font-bold text-center md:text-4xl text-xl'>No subjects found</div>;
 
   return (
-    <div className="min-h-screen flex justify-center bg-gray-100">
+    <div className="min-h-screen flex justify-center bg-zinc-300">
       <div className="w-full mx-16 mt-4 grid gap-x-10 grid-cols-[repeat(auto-fill,minmax(200px,1fr))]">
         {subjects.map((subject: Subject) => (
           <ClassesCard key={subject.id} {...subject} />
