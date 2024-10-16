@@ -34,3 +34,7 @@ model Teacher {
     account_id Int @id @default(autoincrement())
     name String
 }
+
+model Assignement {
+    
+}

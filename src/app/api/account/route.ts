@@ -10,16 +10,9 @@ interface AccountProps {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { isTeacher, name, grade } = body as AccountProps;
+    const {name, grade } = body as AccountProps;
 
-    if (isTeacher) {
-      const newTeacher = await prisma.teacher.create({
-        data: {
-          name,
-        },
-      });
-      return NextResponse.json({ results: newTeacher }, { status: 201 });
-    } else {
+
       const newStudent = await prisma.student.create({
         data: {
           name,
@@ -27,7 +20,6 @@ export async function POST(req: NextRequest) {
         },
       });
       return NextResponse.json({ results: newStudent }, { status: 201 });
-    }
   } catch (error) {
     console.error('Error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

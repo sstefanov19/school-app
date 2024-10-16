@@ -15,11 +15,9 @@ const formSchema = z.object({
 });
 
 export default function CreateClasses() {
-  const [role, setRole] = useState<'teacher' | 'student'>('student');
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      role: 'student',
       name: '',
       grade: 0,
     },
@@ -33,7 +31,6 @@ export default function CreateClasses() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          isTeacher: data.role === 'teacher',
           name: data.name,
           grade: data.grade,
         }),
@@ -68,25 +65,6 @@ export default function CreateClasses() {
       <h1 className='text-black text-4xl font-bold mt-16 mb-8'>Register Teacher/Student</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className='max-w-md w-full flex flex-col gap-6 bg-zinc-600 p-8 rounded-lg shadow-lg'>
-          <FormField control={form.control} name="role" render={({ field }) => (
-            <FormItem>
-              <FormLabel className='text-white font-bold text-lg mb-2'>Role</FormLabel>
-              <FormControl>
-                <select
-                  {...field}
-                  className='w-full p-3 rounded-lg bg-slate-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500'
-                  onChange={(e) => {
-                    field.onChange(e);
-                    setRole(e.target.value as 'teacher' | 'student');
-                  }}
-                >
-                  <option value="teacher">Teacher</option>
-                  <option value="student">Student</option>
-                </select>
-              </FormControl>
-              <FormMessage>{form.formState.errors.role?.message}</FormMessage>
-            </FormItem>
-          )} />
           <FormField control={form.control} name="name" render={({ field }) => (
             <FormItem>
               <FormLabel className='text-white font-bold text-lg mb-2'>Name</FormLabel>
