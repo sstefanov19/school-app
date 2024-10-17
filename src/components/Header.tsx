@@ -4,15 +4,13 @@ import { Bell } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 
-const account  = "Teacher";
-
 export default function Header() {
   return (
     <header className="bg-gradient-to-tr from-zinc-400 to-zinc-600 text-secondary-foreground shadow-md">
     <div className="flex items-center justify-between px-6 py-4">
-        {account === "Teacher" ?
-      <h2 className="text-xl text-white font-semibold">Teacher Dashboard</h2>
-        :   <h2 className="text-xl font-semibold">Student Dashboard</h2> }
+
+      <h2 className="text-xl text-white font-semibold">School Dashboard</h2>
+
 
       <div className="flex items-center">
         <Button
@@ -27,7 +25,7 @@ export default function Header() {
             src="/placeholder.svg?height=32&width=32"
             alt="Teacher"
           />
-          <AvatarFallback>TC</AvatarFallback>
+          <AvatarFallback>SU</AvatarFallback>
         </Avatar>
       </div>
     </div>

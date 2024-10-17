@@ -5,6 +5,7 @@ import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import  QueryProvider from "@/components/QueryProvider";
 import { Toaster } from "@/components/ui/toaster";
+import SessionProviderWrapper from "@/components/SessionProviderWrapper";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -31,6 +32,8 @@ export default function RootLayout({
       <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} flex antialiased`}>
+        <SessionProviderWrapper>
+
         <QueryProvider>
         <Sidebar />
         <div className="flex-1 overflow-y-auto">
@@ -41,6 +44,7 @@ export default function RootLayout({
         </div>
         </div>
      </QueryProvider>
+     </SessionProviderWrapper>
       </body>
     </html>
   );

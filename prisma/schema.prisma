@@ -19,7 +19,6 @@ model Classes {
     subject String
     teacher String
     grade Int
-
 }
 
 
@@ -28,6 +27,7 @@ model Student {
     account_id Int @id @default(autoincrement())
     name String
     grade Int
+    password String
 }
 
 model Teacher {
@@ -36,5 +36,10 @@ model Teacher {
 }
 
 model Assignement {
-    
+    id Int @id @default(autoincrement())
+    title String
+    description String
+    due_date DateTime
+    grade Int
+
 }
