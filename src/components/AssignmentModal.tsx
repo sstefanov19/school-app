@@ -31,7 +31,7 @@ export default function AssignmentModal({ closeModal, assignmentId, studentId }:
     },
   });
 
-  async function handleSubmit(data: { name: string; fileUrl: File | null ; studentId : number ; assignmentId : number }) {
+  async function handleSubmit(data: { name: string; fileUrl: File | null }) {
     const formData = new FormData();
     formData.append('studentId', studentId.toString());
     formData.append('assignmentId', assignmentId.toString());
