@@ -35,7 +35,7 @@ export default function CreateAssignment() {
         formData.append('title', data.title);
         formData.append('description', data.description);
         formData.append('dueDate', data.dueDate);
-        formData.append('grade', data.grade);
+        formData.append('grade', data.grade.toString());
         formData.append('subject', data.subject);
 
         try {

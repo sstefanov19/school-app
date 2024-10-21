@@ -18,12 +18,12 @@ if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma
 
 
 export async function getUserByEmailAndPassword(email: string, password: string) {
-    const user = await prisma.student.findUnique({
+    const user = await prisma.student.findFirst({
       where: { email },
     });
 
     if (user && await bcrypt.compare(password, user.password)) {
-      return { id: user.id, name: user.name, email: user.email };
+      return { name: user.name, account_id: user.account_id };
     }
 
     return null;
