@@ -4,6 +4,26 @@ import { NextAuthOptions } from 'next-auth';
 import GitHubProvider from 'next-auth/providers/github';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
+// Extend the Session interface to include the id property
+declare module 'next-auth' {
+  interface Session {
+    user: {
+      id: number;
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+      grade?: number | null;
+    };
+  }
+}
+
+// Extend the User interface to include the grade property
+declare module 'next-auth' {
+  interface User {
+    grade?: number | null;
+  }
+}
+
 const prisma = new PrismaClient();
 
 export const options: NextAuthOptions = {
@@ -22,7 +42,7 @@ export const options: NextAuthOptions = {
       authorize: async (credentials) => {
         try {
           console.log('Credentials:', credentials);
-          const name = credentials?.name;
+          const name = credentials?.name ?? '';
           const grade = Number(credentials?.grade);
           const password = credentials?.password;
 
@@ -30,7 +50,7 @@ export const options: NextAuthOptions = {
 
           let user = await prisma.student.findFirst({
             where: {
-              name: name,
+              name: name || '',
               grade: grade,
             },
           });
@@ -39,6 +59,9 @@ export const options: NextAuthOptions = {
 
           if (!user) {
             console.log('User not found, creating new user');
+            if (!password) {
+              throw new Error('Password is required');
+            }
             const hashedPassword = await bcrypt.hash(password, 10);
             user = await prisma.student.create({
               data: {
@@ -48,14 +71,14 @@ export const options: NextAuthOptions = {
               },
             });
             console.log('New user created:', user);
-          } else if (await bcrypt.compare(password, user.password)) {
+          } else if (password && await bcrypt.compare(password, user.password)) {
             console.log('Password match');
           } else {
             console.log('Invalid credentials');
             throw new Error('Invalid credentials');
           }
 
-          return { id: user.id, name: user.name, grade: user.grade };
+          return { id: user.account_id.toString(), name: user.name, grade: user.grade };
         } catch (error) {
           console.error('Error during authentication:', error);
           return null;

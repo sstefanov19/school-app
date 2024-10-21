@@ -39,6 +39,7 @@ export default function RootLayout({
         <div className="flex-1 overflow-y-auto">
         <Header />
         <div className="min-h-screen">
+        <div id="modal-root" />
         {children}
         <Toaster />
         </div>
